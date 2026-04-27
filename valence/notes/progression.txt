@@ -31,7 +31,8 @@ Folder structure:
 
 Results: 
 
-1. Evaluation: 
+1. Evaluation 1_draft:
+	Performance: 
 	Evaluation results for subtask1 (valence):
   	r_between      0.714 (1.87e-15)
   	r_within       0.448 (6.12e-09)
@@ -39,4 +40,43 @@ Results:
   	mae_between    0.435
   	mae_composite  0.681
   	mae_within     0.833	
+	
+	Interpretation:
+
+	Learns general sentiment from text
+	Fails to capture temporal + user-specific variation	
+
+2: Evaluation 2_draft:
+	Improvements: 
+	Added metadata features in addition to the text
+	Original model only used "text" as a feature with TF-IDF → Ridge regression
+	From this i addded some extra structures such as: 
+		- text_length
+		- word_count
+		- is_words
+		- collection_phase
+	the model then uses TF-IDF(text) + metadata → Ridge regression
+	text_length and word_count helps because the strucutre of essays are different from short-emotion words. 
+	is_word tells the model whether the entry is a full essay or a feeling-word-list which matters because those two text types are explicitly different in the task. 
+	collection_phase provides some weak temporal/contextual information
+
+	Performance: 	
+	r_between 0.734 (1.31e-16) 
+	r_within 0.453 (7.10e-09) 
+	r_composite 0.612 
+	mae_between 0.422 
+	mae_composite 0.669 
+	mae_within 0.823 
+
+	Key differences: 
+	r_composite: 0.597 → 0.612
+	r_between: 0.714 → 0.734
+	r_within: 0.448 → 0.453 (barely noticable)
+
+	Interpretation: 
+	Better capture global patterns (between users)
+	But still not much better at within-user variation over time
+
+	Bottleneck: 
+	modeling user-specific dynamics
 	
