@@ -1,0 +1,42 @@
+Made first script 27.04.2026
+
+Folder structure: 
+
+.
+├── datasets
+│   ├── test.csv
+│   └── train.csv
+├── eval
+│   ├── assets
+│   │   └── subtask1-template.csv
+│   ├── constants.py
+│   ├── eval_interface.py
+│   ├── eval.py
+│   ├── format_checker.py
+│   └── __pycache__
+│       ├── constants.cpython-312.pyc
+│       ├── eval.cpython-312.pyc
+│       └── format_checker.cpython-312.pyc
+├── logs
+│   └── valence_baseline-3403830.out
+├── notes
+│   ├── progression.txt
+│   └── run.txt
+├── outputs
+│   └── submission_tfidf.csv
+├── README.md
+└── scripts
+    ├── baseline_tfidf.py
+    └── run_baseline.slurm
+
+Results: 
+
+1. Evaluation: 
+	Evaluation results for subtask1 (valence):
+  	r_between      0.714 (1.87e-15)
+  	r_within       0.448 (6.12e-09)
+  	r_composite    0.597
+  	mae_between    0.435
+  	mae_composite  0.681
+  	mae_within     0.833	
+	

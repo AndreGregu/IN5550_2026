@@ -1,0 +1,14 @@
+FROM VALENCE DIR
+
+Run script:
+	python python scripts/baseline_tfidf.py 
+
+Run slurm: 
+	sbatch scripts/run_baseline.slurm
+
+Track slurm: 
+	squeue -u $USER
+	tail -f logs/valence_baseline-<JOBID>.out
+
+Run evaluation:
+	python eval/eval_interface.py   --task subtask1   --submission outputs/submission_tfidf.csv   --labels datasets/test.csv  --dimension valence   --assets-dir eval/assets
