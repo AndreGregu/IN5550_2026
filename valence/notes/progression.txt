@@ -30,53 +30,80 @@ Folder structure:
     └── run_baseline.slurm
 
 Results: 
-
 1. Evaluation 1_draft:
 	Performance: 
-	Evaluation results for subtask1 (valence):
-  	r_between      0.714 (1.87e-15)
-  	r_within       0.448 (6.12e-09)
-  	r_composite    0.597
-  	mae_between    0.435
-  	mae_composite  0.681
-  	mae_within     0.833	
-	
+		Evaluation on valence:
+	  	r_between      0.714 (1.87e-15)
+	  	r_within       0.448 (6.12e-09)
+	  	r_composite    0.597
+	  	mae_between    0.435
+	  	mae_composite  0.681
+	  	mae_within     0.833	
+		
+		Evaluation on arousal: 
+		r_between      0.564 (5.64e-09)
+  		r_within       0.311 (5.40e-06)
+  		r_composite    0.447
+  		mae_between    0.260
+  		mae_composite  0.414
+  		mae_within     0.547	
+
 	Interpretation:
-
-	Learns general sentiment from text
-	Fails to capture temporal + user-specific variation	
-
+		Learns general sentiment from text
+		Fails to capture temporal + user-specific variation	
+		arousal is harder to predict then valence. 
+			valence: Directly expressed in words "happy, sad, tired etc."
+			arousal: Not explicit in text - requires context and intensity understanding
 2: Evaluation 2_draft:
-	Improvements: 
-	Added metadata features in addition to the text
-	Original model only used "text" as a feature with TF-IDF → Ridge regression
-	From this i addded some extra structures such as: 
-		- text_length
-		- word_count
-		- is_words
-		- collection_phase
-	the model then uses TF-IDF(text) + metadata → Ridge regression
-	text_length and word_count helps because the strucutre of essays are different from short-emotion words. 
-	is_word tells the model whether the entry is a full essay or a feeling-word-list which matters because those two text types are explicitly different in the task. 
-	collection_phase provides some weak temporal/contextual information
+	Improvements:
+		Added metadata features in addition to the text
+		Original model only used "text" as a feature with TF-IDF → Ridge regression
+		From this i addded some extra structures such as: 
+			- text_length
+			- word_count
+			- is_words
+			- collection_phase
+		the model then uses TF-IDF(text) + metadata → Ridge regression
+		text_length and word_count helps because the strucutre of essays are different from short-emotion words. 
+		is_word tells the model whether the entry is a full essay or a feeling-word-list which matters because those two text types are explicitly different in the task. 
+		collection_phase provides some weak temporal/contextual information
 
 	Performance: 	
-	r_between 0.734 (1.31e-16) 
-	r_within 0.453 (7.10e-09) 
-	r_composite 0.612 
-	mae_between 0.422 
-	mae_composite 0.669 
-	mae_within 0.823 
+		Evaluation on Valence:
+		r_between 0.734 (1.31e-16) 
+		r_within 0.453 (7.10e-09) 
+		r_composite 0.612 
+		mae_between 0.422 
+		mae_composite 0.669 
+		mae_within 0.823 
 
+		Evaluation on arousal: 
+		r_between      0.542 (2.80e-08)
+	  	r_within       0.313 (1.67e-05)
+	  	r_composite    0.435
+	  	mae_between    0.261
+	  	mae_composite  0.415
+	  	mae_within     0.549
+		
 	Key differences: 
-	r_composite: 0.597 → 0.612
-	r_between: 0.714 → 0.734
-	r_within: 0.448 → 0.453 (barely noticable)
-
+		valence:
+		r_composite: 0.597 → 0.612
+		r_between: 0.714 → 0.734
+		r_within: 0.448 → 0.453 (barely noticable)
+		
+		arousal: 
+		r_between: 0.564 → 0.542
+		r_within:  0.311 → 0.313
+		r_comp:    0.447 → 0.435
+			
+	
 	Interpretation: 
-	Better capture global patterns (between users)
-	But still not much better at within-user variation over time
-
+		Better capture global patterns (between users)
+		But still not much better at within-user variation over time
+		The added features does not help model's ability to predict arousal
+			Proably because metadata adds noise
+			Propperly formulated analysis: 
+			unlike valence, arousal does not benefit from simple structural features such as text length or collection phase. This sugests that arousal is more dependent on nuanced semantic and expressive cues rather than surface-level properties.
 	Bottleneck: 
-	modeling user-specific dynamics
+		modeling user-specific dynamics
 	
