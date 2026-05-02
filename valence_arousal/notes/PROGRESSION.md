@@ -69,6 +69,7 @@
 ---
 
 # Draft 1 — TF-IDF Baseline
+*(`scripts/drafts/draft_01.py`)*
 
 ### Model
 - TF-IDF + Ridge regression
@@ -76,7 +77,8 @@
 ### Key Idea
 - Represent text as word frequency features
 
-### Performance (r_composite)
+### Performance
+*(`r_coposite`)*
 - Valence: 0.597  
 - Arousal: 0.447  
 
@@ -88,6 +90,7 @@
 ---
 
 # Draft 2 — Metadata Features
+*(`scripts/drafts/draft_02.py`)*
 
 ### Improvements
 - Added:
@@ -97,6 +100,7 @@
   - collection_phase
 
 ### Performance
+*(`r_coposite`)*
 - Valence: 0.612 ↑  
 - Arousal: 0.435 ↓  
 
@@ -110,6 +114,7 @@
 ---
 
 # Draft 3 — User Modeling + Split
+*(`scripts/drafts/draft_03.py`)*
 
 ### Improvements
 - Added:
@@ -118,7 +123,8 @@
 - Split models by `is_words`
 - Added intensity features
 
-### Performance (r_composite)
+### Performance
+*(`r_coposite`)*
 - Valence: 0.605 ↓  
 - Arousal: 0.489 ↑  
 
@@ -132,6 +138,7 @@
 ---
 
 # Draft 4 — Transformer Model
+*(`scripts/drafts/draft_04_transformer.py`)*
 
 ### Improvements
 - Replaced TF-IDF with transformer embeddings
@@ -140,7 +147,8 @@
   - temporal features
   - user baselines
 
-### Performance (r_composite)
+### Performance
+*(`r_coposite`)*
 - Valence: 0.645 ↑↑  
 - Arousal: 0.443 ↓  
 
@@ -160,6 +168,8 @@
 ---
 
 # Draft 5 — Hybrid Model (Final)
+*(`scripts/drafts/draft_05_transformer.py`)*
+*(`scripts/drafts/draft_05_hybrid.py`)*
 
 ### Improvements
 - Improved transformer training:
