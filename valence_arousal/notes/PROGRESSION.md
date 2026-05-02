@@ -69,7 +69,7 @@
 ---
 
 ## Performance Comparison Across Drafts
-
+*Bold values indicate the best performance per metric across all drafts.*
 ### Valence
 
 | Draft | r_between | r_within | r_composite | mae_between | mae_within | mae_composite |
@@ -77,8 +77,8 @@
 | 1 (TF-IDF) | 0.714 | 0.448 | 0.597 | 0.435 | 0.833 | 0.681 |
 | 2 (+ Metadata) | 0.734 | 0.453 | 0.612 | 0.422 | 0.823 | 0.669 |
 | 3 (+ User + Split) | 0.725 | 0.450 | 0.605 | 0.414 | 0.808 | 0.653 |
-| 4 (Transformer) | 0.726 | **0.547** | 0.645 | 0.426 | 0.788 | 0.641 |
-| 5 (Hybrid) | **0.757** | 0.525 | **0.656** | **0.395** | **0.748** | **0.600** |
+| 4 (Transformer) | 0.726 | **0.547**<sup>*</sup> | 0.645 | 0.426 | 0.788 | 0.641 |
+| 5 (Hybrid) | **0.757**<sup>*</sup> | 0.525 | **0.656**<sup>*</sup> | **0.395**<sup>*</sup> | **0.748**<sup>*</sup> | **0.600**<sup>*</sup> |
 
 ---
 
@@ -90,7 +90,7 @@
 | 2 (+ Metadata) | 0.542 | 0.313 | 0.435 | 0.261 | 0.549 | 0.415 |
 | 3 (+ User + Split) | 0.627 | 0.322 | 0.489 | 0.239 | 0.518 | 0.387 |
 | 4 (Transformer) | 0.488 | 0.395 | 0.443 | 0.257 | 0.517 | 0.395 |
-| 5 (Hybrid) | **0.645** | **0.407** | **0.536** | **0.233** | **0.498** | **0.373** |
+| 5 (Hybrid) | **0.645**<sup>*</sup> | **0.407**<sup>*</sup> | **0.536**<sup>*</sup> | **0.233**<sup>*</sup> | **0.498**<sup>*</sup> | **0.373**<sup>*</sup> |
 
 ---
 
