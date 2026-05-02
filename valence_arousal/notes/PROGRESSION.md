@@ -76,7 +76,7 @@
 ### Key Idea
 - Represent text as word frequency features
 
-### Performance
+### Performance (r_composite)
 - Valence: 0.597  
 - Arousal: 0.447  
 
@@ -118,7 +118,7 @@
 - Split models by `is_words`
 - Added intensity features
 
-### Performance
+### Performance (r_composite)
 - Valence: 0.605 ↓  
 - Arousal: 0.489 ↑  
 
@@ -140,7 +140,7 @@
   - temporal features
   - user baselines
 
-### Performance
+### Performance (r_composite)
 - Valence: 0.645 ↑↑  
 - Arousal: 0.443 ↓  
 
