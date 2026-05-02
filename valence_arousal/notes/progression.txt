@@ -137,7 +137,7 @@ Results:
 		However, valence performance decreased slightly, likely due to reduced training data per model and the introduction of additional complexity that was not necessary for capturing lexical sentiment. 
 		Overall, these changes demonstrate that modeling user-specific patterns is crucial for capturing emotional dynamics, especially for more challenging targets like arousal, while simpler representations remain sufficient for valence.
 
-	Improvements: 
+	Improvements:
 		Added user-level baseline features: 
 			- user_valence_mean
 			- user_arousal_mean
@@ -201,5 +201,71 @@ Results:
 		limitations: 
 		need more computational power
 		can overfit on small datasets (this is why we have user features + time features)
-		
 
+4: Evaluation 4. draft: 
+	LLM (GPT) egenrated summary: 
+		The transition from Draft 3 to Draft 4 introduced a transformer-based model, replacing the TF-IDF representation with contextual embeddings derived from a pretrained language model. 
+		While Draft 3 relied on lexical features and engineered metadata (including user-level baselines and separate models for essays and word lists), Draft 4 leveraged a transformer to capture deeper semantic and contextual information in the text. 
+		In addition, numeric features such as text statistics, temporal features, and user-level averages were combined with the transformer’s output representation, enabling the model to incorporate both contextual language understanding and structured metadata
+	
+	Improvements: 
+		Replaced TF-IDF features with a transfromer-based representation.
+			- Enables contextual understanding of text. 
+		Introduced pretrained language model embeddings to capture semantic meaning beyond word frequency. 
+		Combined transformer outputs with engineered numeric features such as: 
+			- text statistics
+			- intensity features
+			- user baselines		
+		Incorporated temporal features alongside contextual embeddings for better modeling of emotional progression. 
+		Improved within-person correlation, showing better tracking of individual emotional fluctuations over time. 
+		Increased composite score for valence, indicating better alignment with the tasks evaluation metric
+	
+	Perfromance:
+		Evaluation on valence: 
+		r_between      	0.726 (4.15e-16)
+		r_within       	0.547 (4.04e-09)
+		r_composite    	0.645
+		mae_between    	0.426
+		mae_composite  	0.641
+  		mae_within     	0.788
+		
+		Evaluation on arousal: 
+		r_between      	0.488 (9.15e-07)
+		r_within       	0.395 (2.23e-08)
+		r_composite    	0.443
+		mae_between    	0.257
+		mae_composite  	0.395
+		mae_within     	0.517
+
+	Key difference: 
+		Valence:
+                r_composite:    0.605 → 0.645   (UP drasticly)
+                r_within:       0.450 → 0.547   (UP drasticly)
+                r_between:      0.725 → 0.726   (DOWN slighly)
+
+                Arousal:
+                r_composite:    0.489 → 0.443   (DOWN)
+                r_within:       0.322 → 0.395   (UP drasticly)
+                r_between:      0.627 → 0.488   (DOWN drasticly)		
+
+	Interpretation:
+		Improved within-person correlation for valence, indicating better tracking of emotional fluctuations over time
+		Arousal results were mixed, with slight within-person gains but reduced overall performance due to weaker between-person differentiation
+		Properly formulated analysis: 
+			Draft 4 demonstrates that introducing a transformer-based model improves contextual understanding and significantly enhances within-person correlation—especially for valence—while slightly weakening between-person differentiation and yielding mixed results for arousal, highlighting a trade-off between temporal sensitivity and global user-level modeling.
+
+	Bottleneck:		
+		
+5: Evaluation 5. draft: 
+	Improvements:
+		Extended transformer training 
+		Added a validation split
+		combined the predictions into a hybrid model: 
+			- Final_pred = 0.6 * transformer + 0.4 * tfidf
+		Included seperate models for is_words
+			- Since we saw that this provides results earlier
+
+	Performance:
+		Evaluation on Valence:
+
+		Evaluation on Arousal:

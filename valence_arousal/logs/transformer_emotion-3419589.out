@@ -1,0 +1,35 @@
+Starting job 3419589 on gpu-17 on Fox at Sat May 2 13:26:21 CEST 2026
+
+Using device: cuda
+Training examples: 2764
+Test examples: 1737
+Epoch 1/5 - loss: 1.0245
+Epoch 2/5 - loss: 0.6705
+Epoch 3/5 - loss: 0.5391
+Epoch 4/5 - loss: 0.4679
+Epoch 5/5 - loss: 0.4155
+Saved submission to /fp/homes01/u01/ec-andremg/work/exam/valence_arousal/outputs/submission_transformer.csv
+
+Job 3419589 consumed 0.4 billing hours from project ec403.
+
+Submitted 2026-05-02T12:48:59; waited 35.9 minutes in the queue after becoming eligible to run.
+
+Requested wallclock time: 3.0 hours
+Elapsed wallclock time:   1.4 minutes
+
+Job exited normally.
+
+Task and CPU statistics:
+ID             CPUs  Tasks  CPU util                Start  Elapsed  Exit status
+3419589           4            0.0 %  2026-05-02T13:24:52   84.0 s  0
+3419589.batch     4      1    16.3 %  2026-05-02T13:24:52   84.0 s  0
+
+Used CPU time:   54.7 CPU seconds
+Unused CPU time: 4.7 CPU minutes
+
+Memory statistics, in GiB:
+ID              Alloc   Usage
+3419589          32.0        
+3419589.batch    32.0     1.7
+
+Job 3419589 completed at Sat May 2 13:27:44 CEST 2026

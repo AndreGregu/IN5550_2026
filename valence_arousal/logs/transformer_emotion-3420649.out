@@ -1,0 +1,61 @@
+Starting job 3420649 on gpu-13 on Fox at Sat May 2 19:40:14 CEST 2026
+
+Using device: cuda
+
+============================================================
+Training model for is_words=0
+============================================================
+Training examples: 1131
+Validation examples: 200
+Test examples: 807
+is_words=0 | Epoch 1/8 | train loss: 1.2368 | val loss: 1.0820
+is_words=0 | Epoch 2/8 | train loss: 1.0837 | val loss: 1.0117
+is_words=0 | Epoch 3/8 | train loss: 0.9866 | val loss: 0.8417
+is_words=0 | Epoch 4/8 | train loss: 0.8039 | val loss: 0.7362
+is_words=0 | Epoch 5/8 | train loss: 0.6983 | val loss: 0.6991
+is_words=0 | Epoch 6/8 | train loss: 0.6322 | val loss: 0.6891
+is_words=0 | Epoch 7/8 | train loss: 0.6002 | val loss: 0.6950
+is_words=0 | Epoch 8/8 | train loss: 0.5769 | val loss: 0.6950
+Best validation loss for is_words=0: 0.6891
+
+============================================================
+Training model for is_words=1
+============================================================
+Training examples: 1218
+Validation examples: 215
+Test examples: 930
+is_words=1 | Epoch 1/8 | train loss: 1.2317 | val loss: 0.8684
+is_words=1 | Epoch 2/8 | train loss: 0.7606 | val loss: 0.6131
+is_words=1 | Epoch 3/8 | train loss: 0.6203 | val loss: 0.5709
+is_words=1 | Epoch 4/8 | train loss: 0.5762 | val loss: 0.5613
+is_words=1 | Epoch 5/8 | train loss: 0.5373 | val loss: 0.5481
+is_words=1 | Epoch 6/8 | train loss: 0.4948 | val loss: 0.5389
+is_words=1 | Epoch 7/8 | train loss: 0.4756 | val loss: 0.5311
+is_words=1 | Epoch 8/8 | train loss: 0.4700 | val loss: 0.5322
+Best validation loss for is_words=1: 0.5311
+
+Saved submission to /fp/homes01/u01/ec-andremg/work/exam/valence_arousal/outputs/submission_transformer_split.csv
+
+Job 3420649 consumed 0.8 billing hours from project ec403.
+
+Submitted 2026-05-02T19:39:53; waited 21.0 seconds in the queue after becoming eligible to run.
+
+Requested wallclock time: 3.0 hours
+Elapsed wallclock time:   2.5 minutes
+
+Job exited normally.
+
+Task and CPU statistics:
+ID             CPUs  Tasks  CPU util                Start  Elapsed  Exit status
+3420649           4            0.0 %  2026-05-02T19:40:14  152.0 s  0
+3420649.batch     4      1    19.9 %  2026-05-02T19:40:14  152.0 s  0
+
+Used CPU time:   2.0 CPU minutes
+Unused CPU time: 8.1 CPU minutes
+
+Memory statistics, in GiB:
+ID              Alloc   Usage
+3420649          32.0        
+3420649.batch    32.0     2.9
+
+Job 3420649 completed at Sat May 2 19:42:47 CEST 2026
