@@ -1,4 +1,14 @@
 FROM VALENCE DIR
+Run commands: 
+module use -a /fp/projects01/ec30/software/easybuild/modules/all/
+module load nlpl-nlptools/01-foss-2024a-Python-3.12.3 
+module load nlpl-pytorch/2.6.0-foss-2024a-cuda-12.6.0-Python-3.12.3
+
+OR 
+
+add them to ~/.bashrc
+run by: 
+source ~/.bashrc
 
 Run script:
 	python python scripts/baseline_tfidf.py 

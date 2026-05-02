@@ -186,3 +186,20 @@ Results:
 			While separating models by text type and incorporating user-level features improves arousal prediction, it slightly degrades valence performance, suggesting that valence is already well captured by lexical features and does not benefit from increased model complexity.
 	Bottleneck: 
 		The model still struggles to capture within-person emotional dynamics due to lack of temporal modeling and limited semantic understanding beyond surface-level features. 
+
+4: Implementing a transformer model: 
+	Reasoning: 
+		Previous model rely on bag of words representations (treating text as independent word counts without understanding or context).
+		This works well for valence which is expressed through exlicit sentiment words.
+		Arousal requires a model which depends more on subtle cues such as intensity, context and phrasing. 
+		Transformer model will learn contextual representations of text which will benefit the arousal scores. 
+		Since we have to track emotional variation over time, it is benefitial since the model understands sentence structures and longer contexts. 
+
+		model will become: 
+		Text meaning + user baseline + time context -> prediction
+
+		limitations: 
+		need more computational power
+		can overfit on small datasets (this is why we have user features + time features)
+		
+
