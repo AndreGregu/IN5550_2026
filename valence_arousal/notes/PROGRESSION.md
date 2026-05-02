@@ -210,7 +210,7 @@ Result:
 
 ---
 
-## emaining Bottleneck
+## Remaining Bottleneck
 
 - Optimal weighting between TF-IDF and transformer not fully explored  
 - Further improvements possible via:
