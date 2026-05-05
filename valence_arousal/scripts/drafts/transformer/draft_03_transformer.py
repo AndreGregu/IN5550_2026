@@ -12,6 +12,10 @@ from sklearn.preprocessing import StandardScaler
 from transformers import AutoTokenizer, AutoModel, get_linear_schedule_with_warmup
 
 
+# ============================================================
+# CONFIG
+# ============================================================
+
 ROOT = Path(__file__).resolve().parents[1]
 
 TRAIN_PATH = ROOT / "datasets" / "train.csv"
@@ -30,23 +34,10 @@ VAL_SIZE = 0.15
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-NUMERIC_FEATURES = [
-    "text_length",
-    "word_count",
-    "is_words",
-    "collection_phase",
-    "exclamation_count",
-    "question_count",
-    "uppercase_count",
-    "uppercase_ratio",
-    "time_since_first",
-    "time_since_previous",
-    "user_valence_mean",
-    "user_arousal_mean",
-]
 
-TARGET_COLS = ["valence", "arousal"]
-
+# ============================================================
+# SEED
+# ============================================================
 
 def set_seed(seed):
     random.seed(seed)
@@ -58,10 +49,23 @@ def set_seed(seed):
 set_seed(SEED)
 
 
-def add_base_features(df):
-    df = df.copy()
+# ============================================================
+# LOAD DATA
+# ============================================================
 
-    df["text"] = df["text"].fillna("")
+train = pd.read_csv(TRAIN_PATH)
+test = pd.read_csv(TEST_PATH)
+
+train["text"] = train["text"].fillna("")
+test["text"] = test["text"].fillna("")
+
+
+# ============================================================
+# FEATURE ENGINEERING
+# ============================================================
+
+def add_features(df):
+    df = df.copy()
 
     df["timestamp"] = pd.to_datetime(
         df["timestamp"],
@@ -97,38 +101,45 @@ def add_base_features(df):
     return df
 
 
-def add_user_features_no_leakage(train_split, val_split, test_part):
-    """
-    Computes user mean features only from train_split.
-    This prevents validation leakage.
-    """
-    train_split = train_split.copy()
-    val_split = val_split.copy()
-    test_part = test_part.copy()
-
-    user_means = train_split.groupby("user_id")[["valence", "arousal"]].mean()
-    user_means.columns = ["user_valence_mean", "user_arousal_mean"]
-
-    train_split = train_split.merge(user_means, on="user_id", how="left")
-    val_split = val_split.merge(user_means, on="user_id", how="left")
-    test_part = test_part.merge(user_means, on="user_id", how="left")
-
-    global_valence_mean = train_split["valence"].mean()
-    global_arousal_mean = train_split["arousal"].mean()
-
-    for df in [train_split, val_split, test_part]:
-        df["user_valence_mean"] = df["user_valence_mean"].fillna(global_valence_mean)
-        df["user_arousal_mean"] = df["user_arousal_mean"].fillna(global_arousal_mean)
-
-    return train_split, val_split, test_part
+train = add_features(train)
+test = add_features(test)
 
 
-def clip_tensor_predictions(preds):
-    preds = preds.clone()
-    preds[:, 0] = torch.clamp(preds[:, 0], -2, 2)
-    preds[:, 1] = torch.clamp(preds[:, 1], 0, 2)
-    return preds
+# ============================================================
+# USER BASELINE FEATURES
+# ============================================================
 
+user_means = train.groupby("user_id")[["valence", "arousal"]].mean()
+user_means.columns = ["user_valence_mean", "user_arousal_mean"]
+
+train = train.merge(user_means, on="user_id", how="left")
+test = test.merge(user_means, on="user_id", how="left")
+
+test["user_valence_mean"] = test["user_valence_mean"].fillna(train["valence"].mean())
+test["user_arousal_mean"] = test["user_arousal_mean"].fillna(train["arousal"].mean())
+
+
+NUMERIC_FEATURES = [
+    "text_length",
+    "word_count",
+    "is_words",
+    "collection_phase",
+    "exclamation_count",
+    "question_count",
+    "uppercase_count",
+    "uppercase_ratio",
+    "time_since_first",
+    "time_since_previous",
+    "user_valence_mean",
+    "user_arousal_mean",
+]
+
+TARGET_COLS = ["valence", "arousal"]
+
+
+# ============================================================
+# DATASET
+# ============================================================
 
 class EmotionDataset(Dataset):
     def __init__(self, texts, numeric_features, tokenizer, targets=None):
@@ -161,6 +172,10 @@ class EmotionDataset(Dataset):
         return item
 
 
+# ============================================================
+# MODEL
+# ============================================================
+
 class TransformerRegressor(nn.Module):
     def __init__(self, model_name, num_numeric_features):
         super().__init__()
@@ -187,6 +202,10 @@ class TransformerRegressor(nn.Module):
 
         return self.regressor(combined)
 
+
+# ============================================================
+# TRAIN / VALIDATE HELPERS
+# ============================================================
 
 def train_one_epoch(model, loader, optimizer, scheduler, loss_fn):
     model.train()
@@ -226,9 +245,8 @@ def evaluate_loss(model, loader, loss_fn):
             labels = batch["labels"].to(DEVICE)
 
             preds = model(input_ids, attention_mask, numeric)
-            preds = clip_tensor_predictions(preds)
-
             loss = loss_fn(preds, labels)
+
             total_loss += loss.item()
 
     return total_loss / len(loader)
@@ -245,18 +263,14 @@ def predict(model, loader):
             numeric = batch["numeric"].to(DEVICE)
 
             preds = model(input_ids, attention_mask, numeric)
-            preds = clip_tensor_predictions(preds)
-
             all_preds.append(preds.cpu().numpy())
 
     return np.vstack(all_preds)
 
 
-train = pd.read_csv(TRAIN_PATH)
-test = pd.read_csv(TEST_PATH)
-
-train = add_base_features(train)
-test = add_base_features(test)
+# ============================================================
+# MAIN TRAINING LOOP: SEPARATE MODELS FOR ESSAYS AND WORD LISTS
+# ============================================================
 
 print(f"Using device: {DEVICE}")
 
@@ -284,12 +298,6 @@ for is_words_value in [0, 1]:
 
     train_split = train_split.reset_index(drop=True)
     val_split = val_split.reset_index(drop=True)
-
-    train_split, val_split, test_part = add_user_features_no_leakage(
-        train_split,
-        val_split,
-        test_part,
-    )
 
     scaler = StandardScaler()
 
@@ -338,9 +346,23 @@ for is_words_value in [0, 1]:
         tokenizer,
     )
 
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
-    test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=BATCH_SIZE,
+        shuffle=True,
+    )
+
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=BATCH_SIZE,
+        shuffle=False,
+    )
+
+    test_loader = DataLoader(
+        test_dataset,
+        batch_size=BATCH_SIZE,
+        shuffle=False,
+    )
 
     model = TransformerRegressor(
         MODEL_NAME,
@@ -371,8 +393,19 @@ for is_words_value in [0, 1]:
     print(f"Test examples: {len(test_dataset)}")
 
     for epoch in range(EPOCHS):
-        train_loss = train_one_epoch(model, train_loader, optimizer, scheduler, loss_fn)
-        val_loss = evaluate_loss(model, val_loader, loss_fn)
+        train_loss = train_one_epoch(
+            model,
+            train_loader,
+            optimizer,
+            scheduler,
+            loss_fn,
+        )
+
+        val_loss = evaluate_loss(
+            model,
+            val_loader,
+            loss_fn,
+        )
 
         print(
             f"is_words={is_words_value} | "
@@ -407,6 +440,10 @@ for is_words_value in [0, 1]:
     all_predictions.append(part_submission)
 
 
+# ============================================================
+# SAVE SUBMISSION
+# ============================================================
+
 submission = pd.concat(all_predictions, axis=0)
 
 submission = test[["user_id", "text_id"]].merge(
@@ -414,9 +451,6 @@ submission = test[["user_id", "text_id"]].merge(
     on=["user_id", "text_id"],
     how="left",
 )
-
-submission["pred_valence"] = submission["pred_valence"].clip(-2, 2)
-submission["pred_arousal"] = submission["pred_arousal"].clip(0, 2)
 
 OUT_PATH.parent.mkdir(exist_ok=True)
 submission.to_csv(OUT_PATH, index=False)

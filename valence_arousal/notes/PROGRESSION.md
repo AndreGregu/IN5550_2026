@@ -28,10 +28,11 @@
 │   ├── transformer_emotion-3419589.err
 │   ├── transformer_emotion-3419589.out
 │   ├── transformer_emotion-3420649.err
-│   └── transformer_emotion-3420649.out
+│   ├── transformer_emotion-3420649.out
+│   ├── transformer_emotion-3452544.err
+│   └── transformer_emotion-3452544.out
 ├── notes
 │   ├── PROGRESSION.md
-│   ├── progression.txt
 │   └── run.txt
 ├── outputs
 │   ├── submission_hybrid.csv
@@ -42,12 +43,19 @@
 └── scripts
     ├── baseline_tfidf.py
     ├── drafts
-    │   ├── draft_01.py
-    │   ├── draft_02.py
-    │   ├── draft_03.py
-    │   ├── draft_04_transformer.py
+    │   ├── baseline
+    │   │   ├── draft_01_baseline.py
+    │   │   ├── draft_02_baseline.py
+    │   │   ├── draft_03_baseline.py
+    │   │   ├── draft_04_baseline.py
+    │   │   └── draft_05_baseline.py
     │   ├── draft_05_hybrid.py
-    │   └── draft_05_transformer.py
+    │   ├── hybrid
+    │   │   └── draft_01_hybrid.py
+    │   └── transformer
+    │       ├── draft_01_transformer.py
+    │       ├── draft_02.transformer.py
+    │       └── draft_03_transformer.py
     ├── hybrid_model.py
     ├── run_baseline.slurm
     ├── run_transformer.slurm
@@ -63,8 +71,8 @@
 | 1 | TF-IDF | Text only | 0.597 | 0.447 | Baseline |
 | 2 | + Metadata | Structural features | 0.612 | 0.435 | Helps valence |
 | 3 | + User + Split | Personalization | 0.605 | 0.489 | Helps arousal |
-| 4 | Transformer | Contextual model | 0.645 | 0.443 | Improves within-person |
-| 5 | Hybrid | Combine models | **0.656** | **0.536** | Best overall |
+| 4 | Transformer | Contextual model | 0.630 | 0.397 | Improves within-person |
+| 5 | Hybrid | Combine models | **0.661** | **0.513** | Best overall |
 
 ---
 
@@ -77,8 +85,8 @@
 | 1 (TF-IDF) | 0.714 | 0.448 | 0.597 | 0.435 | 0.833 | 0.681 |
 | 2 (+ Metadata) | 0.734 | 0.453 | 0.612 | 0.422 | 0.823 | 0.669 |
 | 3 (+ User + Split) | 0.725 | 0.450 | 0.605 | 0.414 | 0.808 | 0.653 |
-| 4 (Transformer) | 0.726 | **0.547**<sup>*</sup> | 0.645 | 0.426 | 0.788 | 0.641 |
-| 5 (Hybrid) | **0.757**<sup>*</sup> | 0.525 | **0.656**<sup>*</sup> | **0.395**<sup>*</sup> | **0.748**<sup>*</sup> | **0.600**<sup>*</sup> |
+| 4 (Transformer) | 0.721 | 0.516 | 0.630 | 0.420 | 0.817 | 0.662 |
+| 5 (Hybrid) | **0.760**<sup>*</sup> | **0.533**<sup>*</sup> | **0.661**<sup>*</sup> | **0.396**<sup>*</sup> | **0.774**<sup>*</sup> | **0.619**<sup>*</sup> |
 
 ---
 
@@ -89,8 +97,8 @@
 | 1 (TF-IDF) | 0.564 | 0.311 | 0.447 | 0.260 | 0.547 | 0.414 |
 | 2 (+ Metadata) | 0.542 | 0.313 | 0.435 | 0.261 | 0.549 | 0.415 |
 | 3 (+ User + Split) | 0.627 | 0.322 | 0.489 | 0.239 | 0.518 | 0.387 |
-| 4 (Transformer) | 0.488 | 0.395 | 0.443 | 0.257 | 0.517 | 0.395 |
-| 5 (Hybrid) | **0.645**<sup>*</sup> | **0.407**<sup>*</sup> | **0.536**<sup>*</sup> | **0.233**<sup>*</sup> | **0.498**<sup>*</sup> | **0.373**<sup>*</sup> |
+| 4 (Transformer) | 0.456 | 0.335 | 0.397 | 0.276 | 0.546 | 0.420 |
+| 5 (Hybrid) | **0.630**<sup>*</sup> | **0.374**<sup>*</sup> | **0.513**<sup>*</sup> | **0.242** | **0.514** | **0.386** |
 
 ---
 
