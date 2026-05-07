@@ -7,7 +7,7 @@ import torch
 from torch import nn
 from torch.utils.data import Dataset, DataLoader
 
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GroupShuffleSplit
 from sklearn.preprocessing import StandardScaler
 from transformers import AutoTokenizer, AutoModel, get_linear_schedule_with_warmup
 
@@ -55,12 +55,8 @@ def set_seed(seed):
     torch.cuda.manual_seed_all(seed)
 
 
-set_seed(SEED)
-
-
 def add_base_features(df):
     df = df.copy()
-
     df["text"] = df["text"].fillna("")
 
     df["timestamp"] = pd.to_datetime(
@@ -98,10 +94,6 @@ def add_base_features(df):
 
 
 def add_user_features_no_leakage(train_split, val_split, test_part):
-    """
-    Computes user mean features only from train_split.
-    This prevents validation leakage.
-    """
     train_split = train_split.copy()
     val_split = val_split.copy()
     test_part = test_part.copy()
@@ -252,6 +244,8 @@ def predict(model, loader):
     return np.vstack(all_preds)
 
 
+set_seed(SEED)
+
 train = pd.read_csv(TRAIN_PATH)
 test = pd.read_csv(TEST_PATH)
 
@@ -275,15 +269,29 @@ for is_words_value in [0, 1]:
     train_part = train_part.reset_index(drop=True)
     test_part = test_part.reset_index(drop=True)
 
-    train_split, val_split = train_test_split(
-        train_part,
+    group_splitter = GroupShuffleSplit(
+        n_splits=1,
         test_size=VAL_SIZE,
         random_state=SEED,
-        shuffle=True,
     )
 
-    train_split = train_split.reset_index(drop=True)
-    val_split = val_split.reset_index(drop=True)
+    train_idx, val_idx = next(
+        group_splitter.split(
+            train_part,
+            groups=train_part["user_id"],
+        )
+    )
+
+    train_split = train_part.iloc[train_idx].reset_index(drop=True)
+    val_split = train_part.iloc[val_idx].reset_index(drop=True)
+
+    overlap = set(train_split["user_id"]).intersection(set(val_split["user_id"]))
+
+    if overlap:
+        raise ValueError(f"Validation leakage: overlapping users found: {overlap}")
+
+    print(f"Unique train users: {train_split['user_id'].nunique()}")
+    print(f"Unique validation users: {val_split['user_id'].nunique()}")
 
     train_split, val_split, test_part = add_user_features_no_leakage(
         train_split,
